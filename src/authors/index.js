@@ -64,25 +64,49 @@ authorsRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-authorsRouter.put("/:authorId", async (req, res, next) => {
-  try {
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
+authorsRouter.put("/:id", async (req, res, next) => {
+    try {
+        const fileAsABuffer = fs.readFileSync(authorsFilePath)
+        const fileAsAString = fileAsABuffer.toString()
+        let fileAsAJSONArray = JSON.parse(fileAsAString)
+        
+        const foundAuthorIndex = fileAsAJSONArray.findIndex(author => author.id === req.params.id)
+        if(!foundAuthorIndex == -1){
+            res.status(404).send({message: `Author with ${req.params.id} is not found`})
+        }
+
+        const authorsDataBeforeChange = fileAsAJSONArray[foundAuthorIndex]
+        const authorsDataAfterChange ={
+            ...authorsDataBeforeChange,
+            ...req.body,
+            updatedAt: new Date(),
+            id: req.params.id
+        }
+        fileAsAJSONArray[foundAuthorIndex] = authorsDataAfterChange
+        fs.writeFileSync(authorsFilePath, JSON.stringify(fileAsAJSONArray))
+        res.send(authorsDataAfterChange)
+    
+  
+  
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
 });
 
 authorsRouter.delete("/:id", async (req, res, next) => {
   try {
       const fileAsABuffer = fs.readFileSync(authorsFilePath)
       const fileAsAString = fileAsABuffer.toString()
-      const fileAsAJSONArray = JSON.parse(fileAsAString)
+      let fileAsAJSONArray = JSON.parse(fileAsAString)
       
       const foundAuthor = fileAsAJSONArray.find(author => author.id === req.params.id)
-      if(!foundAuthor){
+      if (!foundAuthor) {
           res.status(404).send({message: `Author with ${req.params.id} is not found`})
       }
+      fileAsAJSONArray = fileAsAJSONArray.filter(
+        (author) => author.id !== req.params.id)
       fs.writeFileSync(authorsFilePath, JSON.stringify(fileAsAJSONArray))
-      res.status(204).send()
+      res.status(204).send("deleted")
   
 
 
