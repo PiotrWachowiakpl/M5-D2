@@ -1,16 +1,1 @@
-[{	
-    "_id": "SERVER GENERATED ID",
-    "category": "ARTICLE CATEGORY",
-    "title": "ARTICLE TITLE",
-    "cover":"ARTICLE COVER (IMAGE LINK)",
-    "readTime": {
-        "value": 2,
-      "unit": "minute"
-     },
-    "author": {
-        "name": "AUTHOR AVATAR NAME",
-        "avatar":"AUTHOR AVATAR LINK"
-        },
-     "content":"HTML",
-     "createdAt": "NEW DATE"
-    }]
+[{"id":"77l6o4kz1tc5fu","name":"piotr","surname":"wach","email":"test@test.pl","dateOfBirth":"1/1/1999","avatar":"https://ui-avatars.com/api/?name=piotr+wach","createdAt":"2022-01-30T22:06:45.641Z","updatedAt":"2022-01-30T22:06:45.641Z"}]
