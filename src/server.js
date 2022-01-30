@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import listEndpoints from "express-list-endpoints"
 import authorsRouter from "./authors/index.js"
+import { notFound, forbidden, catchErrors  } from "./errorHandlers.js"
 
 const server = express()
 const port =  3002
@@ -9,7 +10,9 @@ const port =  3002
 
 server.use(express.json())
 server.use("/authors", authorsRouter)
-
+server.use(notFound)
+server.use(forbidden)
+server.use(catchErrors)
 console.table(listEndpoints(server))
 server.listen(port, ()=>console.log(`Server is running on PORT : ${port}`))
 
