@@ -47,12 +47,13 @@ authorsRouter.get("/", async (req, res, next) => {
   }
 });
 
-authorsRouter.get("/:authorId", async (req, res, next) => {
+authorsRouter.get("/:id", async (req, res, next) => {
   try {
     const fileAsABuffer = fs.readFileSync(authorsFilePath);
     const fileAsAString = fileAsABuffer.toString();
     const fileAsAJSONArray = JSON.parse(fileAsAString);
-    const foundAuthor = fileAsAJSONArray.find(author=>author.id === req.params.id)
+
+    const foundAuthor = fileAsAJSONArray.find(author => author.id === req.params.id)
     if(!foundAuthor){
         res.status(404).send({message: `Author with ${req.params.id} is not found`})
     }
