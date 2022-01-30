@@ -71,8 +71,21 @@ authorsRouter.put("/:authorId", async (req, res, next) => {
   }
 });
 
-authorsRouter.delete("/:authorId", async (req, res, next) => {
+authorsRouter.delete("/:id", async (req, res, next) => {
   try {
+      const fileAsABuffer = fs.readFileSync(authorsFilePath)
+      const fileAsAString = fileAsABuffer.toString()
+      const fileAsAJSONArray = JSON.parse(fileAsAString)
+      
+      const foundAuthor = fileAsAJSONArray.find(author => author.id === req.params.id)
+      if(!foundAuthor){
+          res.status(404).send({message: `Author with ${req.params.id} is not found`})
+      }
+      fs.writeFileSync(authorsFilePath, JSON.stringify(fileAsAJSONArray))
+      res.status(204).send()
+  
+
+
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
