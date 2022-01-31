@@ -4,8 +4,11 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { join } from "path";
 import uniqid from "uniqid";
-import { checkBlogPostSchema, checkValidationResult } from "./validation.js";
-import { checkSchema } from "express-validator";
+import { 
+  checkBlogPostSchema,
+  checkSearchSchema,
+  checkValidationResult,
+} from "./validation.js";
 
 const fileNameIAmWorkingOn = fileURLToPath(import.meta.url);
 const directoryNameTheFileIsIn = dirname(fileNameIAmWorkingOn);
@@ -43,6 +46,26 @@ blogsRouter.get("/", async (req, res, next) => {
     res.status(500).send({ message: error.message });
   }
 });
+
+blogsRouter.get(
+  "/search",
+  checkSearchSchema,
+  checkValidationResult,
+  async (req, res, next) => {
+    try {
+      const { title } = req.query;
+      const fileAsBuffer = fs.readFileSync(blogsFilePath);
+      const fileAsString = fileAsBuffer.toString();
+      const array = JSON.parse(fileAsString);
+      const filtered = array.filter((blog) =>
+        blog.title.toLowerCase().includes(title.toLowerCase())
+      );
+      res.send(filtered);
+    } catch (error) {
+      res.send(500).send({ message: error.message });
+    }
+  }
+);
 
 blogsRouter.get("/:id", async (req, res, next) => {
   try {
