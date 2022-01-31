@@ -1,7 +1,7 @@
 export const notFound = (err,req,res,next) =>{
     if (err && err.status === 400) {
 
-        res.status(400).send({message: err.message || "NOT FOUND"})
+        res.status(400).send({message: err.message || "NOT FOUND", errors: err.errors || []})
     }
 next()
 }
